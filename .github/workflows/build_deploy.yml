@@ -61,7 +61,6 @@ jobs:
       - name: ssh-connection
         run: ssh ec2-test |
             echo $PATH;
-            which yum;
             sudo service docker start;
             sudo docker pull ghcr.io/indhumathiparamasivam/helloworld-docker:main;
             sudo docker images
