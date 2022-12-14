@@ -59,10 +59,10 @@ jobs:
               SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
       - name: ssh-connection
-        run: ssh ec2-test |
-            echo $PATH;
+        run: ssh ec2-test "echo $PATH;
+            sudo yum install docker -y
             sudo service docker start;
             sudo docker pull ghcr.io/indhumathiparamasivam/helloworld-docker:main;
             sudo docker images;
             imageid=$(sudo docker images -q);
-            sudo docker run $imageid
+            sudo docker run $imageid"
