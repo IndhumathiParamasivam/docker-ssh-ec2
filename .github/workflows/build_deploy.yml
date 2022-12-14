@@ -65,4 +65,4 @@ jobs:
             sudo docker pull ghcr.io/indhumathiparamasivam/helloworld-docker:main;
             sudo docker images;
             imageid=$(sudo docker images -q);
-            sudo docker run $imageid"
+            sudo docker run '${imageid}'"
