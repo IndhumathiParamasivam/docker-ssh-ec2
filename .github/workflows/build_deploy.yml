@@ -1,0 +1,67 @@
+name: Build and deploy to ec2 instance
+
+on:
+   push:
+    branches: [ main ]
+env:
+    REGISTRY: ghcr.io
+    IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+    build-and-push-image:
+     runs-on: ubuntu-latest
+     permissions:
+      contents: read
+      packages: write
+
+     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v1
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          
+      - name: Configure SSH
+        run: |
+             mkdir -p ~/.ssh/
+             cd ~
+             ls -la
+             echo "$SSH_KEY" > ~/.ssh/connection-key.key
+             chmod 600 ~/.ssh/connection-key.key
+             cat >> ~/.ssh/config <<END
+             Host ec2-test
+                HostName $SSH_HOST
+                User $SSH_USER
+                IdentityFile ~/.ssh/connection-key.key
+                StrictHostKeyChecking no
+             END
+        env:
+              SSH_USER: ${{ secrets.USERNAME }}
+              SSH_HOST: ${{ secrets.HOST_DNS }}
+              SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: ssh-connection
+        run: ssh ec2-test |
+            sudo yum install docker -y;
+            sudo service docker start;
+            sudo docker pull ghcr.io/indhumathiparamasivam/helloworld-docker:main;
+            imageid=$(sudo docker images -q);
+            sudo docker run $imageid
