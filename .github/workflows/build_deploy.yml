@@ -62,7 +62,8 @@ jobs:
         run: ssh ec2-test "echo \$PATH;
             sudo yum install docker -y
             sudo service docker start;
-            sudo docker pull ghcr.io/indhumathiparamasivam/helloworld-docker:main;
+            docker pull ghcr.io/indhumathiparamasivam/docker-ssh-ec2:main;
             sudo docker images;
             imageid=$(sudo docker images -q);
+            echo \$imageid
             sudo docker run \${imageid}"
