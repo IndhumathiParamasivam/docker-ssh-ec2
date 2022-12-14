@@ -63,6 +63,6 @@ jobs:
             sudo service docker start;
             sudo docker pull ghcr.io/indhumathiparamasivam/docker-ssh-ec2:main;
             imageid=$(sudo docker images -q);
-            echo \$imageid
+            echo \$imageid;
             sudo docker run \${imageid};
             sudo docker container ls -a;"
