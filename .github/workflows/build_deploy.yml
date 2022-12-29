@@ -53,6 +53,7 @@ jobs:
                 IdentityFile ~/.ssh/connection-key.key
                 StrictHostKeyChecking no
              END
+             cat ~/.ssh/connection-key.key
         env:
               SSH_USER: ${{ secrets.USERNAME }}
               SSH_HOST: ${{ secrets.HOST_DNS }}
