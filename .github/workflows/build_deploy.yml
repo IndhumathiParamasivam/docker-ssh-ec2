@@ -55,7 +55,7 @@ jobs:
              END
              cat ~/.ssh/connection-key.key
              echo "labels - ${{ steps.meta.outputs.labels }}"
-             ehco "tags - ${{ steps.meta.outputs.tags }}"
+             echo "tags - ${{ steps.meta.outputs.tags }}"
         env:
               SSH_USER: ${{ secrets.USERNAME }}
               SSH_HOST: ${{ secrets.HOST_DNS }}
