@@ -36,8 +36,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: v1.1
-          #${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           
       - name: Configure SSH
@@ -55,6 +54,8 @@ jobs:
                 StrictHostKeyChecking no
              END
              cat ~/.ssh/connection-key.key
+             echo "labels - ${{ steps.meta.outputs.labels }}"
+             ehco "tags - ${{ steps.meta.outputs.tags }}"
         env:
               SSH_USER: ${{ secrets.USERNAME }}
               SSH_HOST: ${{ secrets.HOST_DNS }}
